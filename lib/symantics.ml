@@ -34,8 +34,19 @@ module type Symantics = sig
   val leq : int repr -> int repr -> bool repr
   val if_ : bool repr -> (unit -> 'x) -> (unit -> 'x) -> ('da repr as 'x)
 end
-    
 
+let int {S : Symantics} = S.int
+let bool {S : Symantics} = S.bool
+let lam {S : Symantics} = S.lam
+let app {S : Symantics} = S.app
+let fix {S : Symantics} = S.fix
+let add {S : Symantics} = S.add
+let mul {S : Symantics} = S.mul
+let leq {S : Symantics} = S.leq
+let if_ {S : Symantics} = S.if_
+
+
+(* This is fine but kind of meh, which is where implicits come in *)
 
 implicit module EX {S: Symantics} = struct
   open S
@@ -76,6 +87,11 @@ module L = struct
   let if_ b t e = b + t () + e () + 1
   end 
 
-  module EXL = EX {L}
+(* Instead having to create a seperate module we can do this *)
 
-  let x = let module E = EX {L} in E.test1 ()
+let test1 {S : Symantics} () = app (lam (fun x -> x)) (bool true)
+
+(* Instead of needing something like this we can then do *)
+let x = let module E = EX {L} in E.test1 ()
+
+let x = test1 {R} ()
