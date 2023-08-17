@@ -1,0 +1,4 @@
+(library
+ (public_name tagless)
+ (modules Tag)
+ (synopsis "Experimental library using modular implicits"))
