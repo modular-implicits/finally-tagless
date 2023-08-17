@@ -11,13 +11,19 @@ module type Arithmetic = sig
   val mul : int t -> int t -> int t
 end
 
-type 'a eval = Eval of 'a
+let num {A : Arithmetic} = A.num
+let add {A : Arithmetic} = A.add
+let mul {A : Arithmetic} = A.mul
+
+type 'a eval = {unEval : int}
+
+(* This is currently hiding the implementation type which is not what I want*)
 
 implicit module EvalInterpreter : Arithmetic = struct
   type 'a t = 'a eval
-  let num x = Eval x
-  let add (Eval x) (Eval y) = Eval (x + y)
-  let mul (Eval x) (Eval y) = Eval (x * y)
+  let num x = { unEval = x }
+  let add x y = { unEval = (x.unEval + y.unEval) }
+  let mul x y = { unEval = (x.unEval * y.unEval) }
 end
 
 type 'a pretty_print = PrettyPrint of string
