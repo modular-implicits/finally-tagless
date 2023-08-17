@@ -92,7 +92,7 @@ module L = struct
 let test1 {S : Symantics} () = app (lam (fun x -> x)) (bool true)
 
 (* Instead of needing something like this we can then do *)
-let x = let module E = EX {L} in E.test1 ()
+
 
 (* We can do this instead! *)
 let x = test1 {R} ()

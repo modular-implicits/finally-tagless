@@ -1,4 +1,5 @@
 open Tagless.Tag;;
+open Tagless.Symantics;;
 
 
 let () = print_endline "Hello World";;
@@ -18,14 +19,20 @@ let () =
     assert ("(5 + 10)" = z.unPrettyPrint);
 end;;
 
+(* Using proper finally tagless with functions,
+with implicits also works well here:*)
+
 let () = 
-  begin 
-    let x = ((num 5) : int eval) in 
-    let y = add (num 10) x in
-    assert (15 = y.unEval); 
-    let z = add ((num 10) : int pretty_print) (num 5) in
-    assert ("(10 + 5)" = z.unPrettyPrint);
-  end;;
+    begin 
+      let test1 {S : Symantics} () = app (lam (fun x -> x)) (bool true) in 
+      let x = test1 {R} () in 
+      assert (x);
+      let x = test1 {L} () in
+      assert (3 = x);
+    end
+
+(* Instead of needing something horrible like let x = let module E = EX {L} in E.test1 ()*)
+
 
 
 
