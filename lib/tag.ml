@@ -21,13 +21,12 @@ implicit module EvalInterpreter : Arithmetic with type 'a t = 'a eval = struct
   let mul x y = { unEval = (x.unEval * y.unEval) }
 end
 
-type 'a pretty_print = PrettyPrint of string
+type 'a pretty_print = {unPrettyPrint : string}
+
 
 implicit module PrettyPrintInterpreter : Arithmetic with type 'a t = 'a pretty_print = struct
   type 'a t = 'a pretty_print
-  let num x = PrettyPrint (string_of_int x)
-  let add (PrettyPrint x) (PrettyPrint y) = PrettyPrint ("(" ^ x ^ " + " ^ y ^ ")")
-  let mul (PrettyPrint x) (PrettyPrint y) = PrettyPrint ("(" ^ x ^ " * " ^ y ^ ")")
+  let num x = { unPrettyPrint = string_of_int x }
+  let add x y = { unPrettyPrint = "(" ^ x.unPrettyPrint ^ " + " ^ y.unPrettyPrint ^ ")" }
+  let mul x y = { unPrettyPrint = "(" ^ x.unPrettyPrint ^ " * " ^ y.unPrettyPrint ^ ")" }
 end
-
-
