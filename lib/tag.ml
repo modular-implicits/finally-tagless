@@ -1,9 +1,4 @@
 
-module type Repr = sig 
-  type 'a t
-end
-
-
 module type Arithmetic = sig
   type 'a t 
   val num : int -> int t
